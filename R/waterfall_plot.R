@@ -174,7 +174,7 @@ waterfall_plot <- function (object, obs_num = NULL, title = NULL,
      theme( panel.border = element_blank(), panel.grid.minor = element_blank(),
             panel.grid.major.x = element_blank(), axis.line.x = element_line(),
             axis.ticks.y =  element_blank()) +
-     labs(y = element_blank(), x ="Prediction")  +
+     labs(y = "", x ="Prediction")  +
      annotate("text", x = obj$to[1], y = obj$i[1] - 0.5, label = paste0("E[f(x)]=",round(obj$from [1],3)),
               vjust = "inward", hjust = "inward", size = 3)+
      annotate("text",x = obj$to[dim(obj)[1]],y = obj$i[dim(obj)[1]]-0.5 ,

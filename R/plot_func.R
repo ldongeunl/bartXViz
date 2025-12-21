@@ -36,7 +36,7 @@
 
 
 # barplot -----
-bar_plot <- function (object, probs, plot.flag,title, ...) {
+bar_plot <- function (object, probs, plot.flag,title, x_text, y_text, ...) {
   lower<-upper<-group<-0;
   if (is.null(probs)) {
     object_summary <- data.frame(mean = apply(object,2,mean, na.rm=TRUE)  )
@@ -55,12 +55,11 @@ bar_plot <- function (object, probs, plot.flag,title, ...) {
   }
 
 
-
   if(plot.flag){
-
+    
     plot_bar <- ggplot( object_summary, aes(x = reorder(names, +mean), y = mean) ) +
       geom_bar( stat = "identity" ,fill="grey80")  +
-      ylab("Mean(|SHAP|)") + xlab("") +
+      labs(x= x_text,y= y_text)+
       geom_errorbar(aes(ymin = lower,ymax= upper,color=group), width = 0.2,linewidth=1)+
       geom_point(aes(y=median),color="blue",size=3) +
       geom_text(aes(label = sprintf("%.3f",round(mean,3))), vjust = -0.3, hjust = -0.3,  size=3.5)+
@@ -74,7 +73,7 @@ bar_plot <- function (object, probs, plot.flag,title, ...) {
 
     plot_bar <- ggplot( object_summary, aes(x = reorder(names, +mean), y = mean) ) +
       geom_bar( stat = "identity" ,fill="grey")  +
-      ylab("Mean(|SHAP|)") + xlab("")  +
+      labs(x=x_text,y= y_text)+
       geom_text(aes(label = sprintf("%.3f",round(mean,3))), ,  hjust = "inward",  size=3.5)+
       coord_flip(ylim = c(ymin , max(object_summary$mean) ))  + theme_bw()
   }
@@ -130,8 +129,10 @@ min_max_normalization <- function(x) {
 
 # summary plot ------------------
 
-summary_plot <- function (object,title,...) {
+summary_plot <- function (object,title, x_text, y_text,...) {
   value <- variable <- normalize <- 0;
+  
+  
   plot_summary <- object$long %>% filter(is.na(value)==FALSE) %>%
      ggplot(aes(variable, value)) +
     geom_sina(aes(color= normalize*12),
@@ -143,7 +144,7 @@ summary_plot <- function (object,title,...) {
     theme_bw(base_size = 12) + coord_flip()  +
     theme(axis.line.y = element_blank(),axis.ticks.y = element_blank(),
           legend.position="right",legend.title = element_blank() ) +
-    labs(y = "SHAP (Impact on model output)", x = "" )
+    labs(y = y_text, x = x_text )
 
   if(!is.null(title)) {
     plot_summary  <- plot_summary  + ggtitle(title)

@@ -18,18 +18,24 @@
 #' Enter \code{TRUE} to check the Shapley values adjusted based on the model's average contribution.
 #' @param plot.flag If \code{average = "obs"}, the quantile interval of each variable's is provided by default.
 #' @param probs Enter the probability for the quantile interval. The default value is \code{0.95}.
+#' @param xlab  Enter the label to be displayed on the x-axis. If not provided, a default label will be used.
+#' @param ylab Enter the label for the y-axis if needed.
 #' @param ... Additional arguments to be passed
 #' @return The plot is returned based on the specified option.: 
-#' \item{out}{If average is \code{"obs"} or \code{"post"}, a bar plot or summary plot is generated based on the selected averaging criterion. If average is \code{"both"}, a boxplot is displayed to
-#'show the distribution of Shapley values computed using both criteria. If adjust is \code{TRUE}, the adjusted Shapley values are displayed.
+#' \item{out}{If average is \code{"obs"} or \code{"post"}, a bar plot or summary plot is generated based on the selected averaging criterion. 
+#' When \code{average} is set to \code{"both"}, either a bar plot or a boxplot comparing the distributions of Shapley values computed under the two averaging criteria is generated.
+#' In the case where a boxplot is produced, the observation-based and posterior-sample-based summaries can additionally be rendered separately
+#' via \code{out$observation} and \code{out$post}, respectively.
+#' If adjust is \code{TRUE}, the adjusted Shapley values are displayed.
 #' If \code{num_post} is specified, a bar plot or summary plot for the selected posterior sample is generated.}
 #' @importFrom dplyr n
 #' @importFrom dplyr mutate
 #' @export
 #' 
-plot.Explain <-  function(x, average = NULL, type = NULL,  num_post= NULL,
-                          plot.flag=TRUE, adjust= FALSE,  probs=0.95, title=NULL,...){
-  
+plot.Explain <-  function(x, average=NULL, type=NULL, num_post=NULL,
+                          plot.flag=TRUE, adjust= FALSE, probs=0.95,
+                          title=NULL, xlab=NULL, ylab = NULL,...){
+
   
   if (!inherits(x, "Explain") ) {
     message("The input object must be of class 'Explain'.")
@@ -39,7 +45,17 @@ plot.Explain <-  function(x, average = NULL, type = NULL,  num_post= NULL,
     return(invisible(NULL))
   }
   
-  
+  if (is.null(xlab)) { 
+    y_text <- if (!is.null(type) && type == "bees") {
+      "SHAP (Impact on model output)"
+    } else {
+      "Importance"
+    }} else { 
+      y_text = xlab 
+    }
+  if (is.null(ylab)){x_text =""} else {x_text = ylab}
+
+    
     value <- variable <- n <- Average_re <- 0;
     object <- x;
     
@@ -107,18 +123,18 @@ plot.Explain <-  function(x, average = NULL, type = NULL,  num_post= NULL,
 
         sample_summary$percent <- paste0(sprintf("%.1f", round(sample_summary$zero/sample_summary$n*100, 1)) ,"%")
 
-        out <- bar_plot (Local_mean,probs = NULL, plot.flag = FALSE , title  )
+        out <- bar_plot (Local_mean,probs = NULL, plot.flag = FALSE, title, x_text, y_text)
 
         ymin <- (- diff(range(out$coordinates$limits$y)) * 0.02)
 
         out <- out +
-          annotate("text",x=sample_summary$variable, y =  ymin,
+          annotate("text",x=sample_summary$variable, y=ymin,
                    hjust = 1, label = sample_summary$percent, size = 3.5)
 
 
       } else if (isTRUE( type == "bees")){
         #  summary plot
-        out <- summary_plot (local_obs,title )
+        out <- summary_plot (local_obs,title, x_text, y_text)
         print (out)
       }
     }
@@ -139,7 +155,7 @@ plot.Explain <-  function(x, average = NULL, type = NULL,  num_post= NULL,
       colnames(obs_mean_shap) = names(object$phis)
 
 
-      out <- bar_plot (obs_mean_shap, probs, plot.flag = TRUE, title)
+      out <- bar_plot (obs_mean_shap, probs, plot.flag = TRUE, title, x_text, y_text)
 
       if (isTRUE(type =="bees")) {
         message("In Average based on observation,\n a barplot is also provided by entering type='bees'.")
@@ -184,7 +200,7 @@ plot.Explain <-  function(x, average = NULL, type = NULL,  num_post= NULL,
 
           sample_summary$percent <- paste0(sprintf("%.1f", round(sample_summary$zero/sample_summary$n*100, 1)) ,"%")
 
-          out <- bar_plot (Local_mean, probs = NULL, plot.flag = FALSE,title)
+          out <- bar_plot (Local_mean, probs = NULL, plot.flag = FALSE,title, x_text, y_text)
           ymin <- (- diff(range(out$coordinates$limits$y)) * 0.02)
 
           out <- out +
@@ -195,7 +211,7 @@ plot.Explain <-  function(x, average = NULL, type = NULL,  num_post= NULL,
 
         } else if (isTRUE( type == "bees")){
           #  summary plot
-          out <- summary_plot (local_total,title )
+          out <- summary_plot (local_total,title, x_text, y_text)
           print (out)
 
         }
@@ -220,13 +236,13 @@ plot.Explain <-  function(x, average = NULL, type = NULL,  num_post= NULL,
 
         if (isTRUE(type == "bees") | is.null (type)){
           # Local SHAP summary plot - i th posterior
-          out <- summary_plot (local_obs ,title)
+          out <- summary_plot (local_obs ,title, , x_text, y_text)
           annotate_figure(out, top =  text_grob(paste0("Sample number = ", num_post),
                               hjust = 1, x = 0.95,vjust = 1.05, size = 10 ))
           
         } else if (isTRUE(type == "bar")) {
 
-          out <- bar_plot (abs(obs), probs =NULL, plot.flag = FALSE,title )
+          out <- bar_plot (abs(obs), probs =NULL, plot.flag = FALSE,title, x_text, y_text )
 
           sample_summary <-  local_obs$long %>% filter (is.na (value)==FALSE  ) %>%
             select(c("variable", "value")) %>% group_by(variable) %>% mutate (n=n()) %>%
@@ -312,26 +328,26 @@ plot.Explain <-  function(x, average = NULL, type = NULL,  num_post= NULL,
 
 
       if ( is.null(type) | isTRUE(type == "bees")) {
-
+        
         ymax <- max (data_list$total_long$value, na.rm = TRUE) * (1+0.001)
         ymin <- (- diff(range(data_list$total_long$value))*0.05)
 
         left_p <- data_list$total_long %>% filter (is.na (value)==FALSE & Average_re=="Observation")%>%
           ggplot(  aes(x= variable, y=value, fill= Average_re )) +
           geom_boxplot() + coord_flip() + theme_bw(base_size = 11) +
-          labs(fill = "", x="",y="Mean(|SHAP|)") +
+          labs(fill = "", x=x_text, y = y_text) +
           scale_x_discrete(limits = rev(obs_variable),
                            labels = rev(obs_variable))+
           scale_fill_manual(values=c( "#F8766D"))+
-          theme(legend.position = "bottom") + ylim(ymin, ymax )
+          theme(legend.position = "bottom") + ylim(ymin, ymax)
 
         sample_summary <- data_list$total_long %>% filter (is.na (value)==FALSE & Average_re=="Samples")%>%
-          select(c("variable", "value"))%>% group_by(variable) %>% mutate (n=n() ) %>%
+          select(c("variable", "value"))%>% group_by(variable) %>% mutate (n=n()) %>%
           select (c("variable","n"))%>%distinct(.keep_all = TRUE)
 
         sample_zero <- data_list$total_long %>% filter(is.na (value)==FALSE & Average_re=="Samples" ) %>%
           select(c("variable", "value"))%>% group_by(variable) %>% mutate (n=n())%>%
-          filter(value==0) %>% mutate (zero =n()) %>% distinct(.keep_all = TRUE) %>% select(c("variable", "zero"))
+          filter(value==0) %>% mutate (zero=n()) %>% distinct(.keep_all = TRUE) %>% select(c("variable", "zero"))
 
         sample_summary <- left_join(sample_summary, sample_zero, by = "variable" )
         sample_summary [which(is.na(sample_summary$zero)), "zero"] <- 0
@@ -341,28 +357,35 @@ plot.Explain <-  function(x, average = NULL, type = NULL,  num_post= NULL,
         right_p <-  data_list$total_long %>% filter (is.na (value)==FALSE & Average_re=="Samples")%>%
           ggplot(aes(x= variable, y=value, fill= Average_re)) +
           geom_boxplot() + coord_flip() + theme_bw(base_size = 11) +
-          labs(fill = "", x="",y="Mean(|SHAP|)") +
+          labs(fill = "", x=x_text,y= y_text) +
           scale_x_discrete(limits = rev(obs_variable),
                            labels = rev(obs_variable))+
           scale_fill_manual(values=c("#00BFC4"))+
-          theme(legend.position = "bottom") + ylim(ymin, ymax )
+          theme(legend.position = "bottom") + ylim(ymin, ymax)
 
         right_p <- right_p + annotate("text",x= sample_summary$variable,
                                      y = - diff(range(data_list$total_long$value))*0.02 ,
                                      hjust = 1, label = sample_summary$percent , size = 2.5)
 
-
-        grid.arrange( left_p, right_p, ncol= 1, top=title  )
-
+        out <- list(
+          combined = gridExtra::arrangeGrob(left_p, right_p, ncol = 1,
+                                 top = textGrob(title, x = 0.2, hjust = 0)),
+          observation = left_p,
+          post = right_p
+        )
+        grid::grid.draw(out$combined)
+        return(invisible(out))
+       
         if ( isTRUE(type =="bees") ) {
           message("In Average = 'both',\n a baxplot is also provided by entering type='bees'.")
         }
 
       } else if (isTRUE(type == "bar")){
+        
         out <- ggplot( data_list$mean_data, aes(x = variable, y = mean, fill = Average_re )) +
           geom_bar( stat = "identity", position="dodge") + coord_flip() + theme_bw(base_size = 11) +
           scale_fill_manual(values=c( "#00BFC4","#F8766D"))+
-          labs(fill = "Criteria for average ", x="",y="Mean(|SHAP|)") +
+          labs(fill = "Criteria for average ", x=y_text,y=x_text) +
           scale_x_discrete(limits = rev(obs_variable), labels = rev(obs_variable)) +
           ylim(c(0,max( data_list$mean_data$mean)  ))+
           geom_text(aes( label = sprintf("%.3f",round(mean,3)) ),

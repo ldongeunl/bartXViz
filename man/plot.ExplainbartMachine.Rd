@@ -13,6 +13,8 @@
   adjust = FALSE,
   probs = 0.95,
   title = NULL,
+  xlab = NULL,
+  ylab = NULL,
   ...
 )
 }
@@ -40,12 +42,19 @@ Enter \code{TRUE} to check the Shapley values adjusted based on the model's aver
 
 \item{title}{The title of the plot, with a default value of \code{NULL}.}
 
+\item{xlab}{Enter the label to be displayed on the x-axis. If not provided, a default label will be used.}
+
+\item{ylab}{Enter the label for the y-axis if needed.}
+
 \item{...}{Additional arguments to be passed}
 }
 \value{
 The plot is returned based on the specified option.: 
-\item{out}{If average is \code{"obs"} or \code{"post"}, a bar plot or summary plot is generated based on the selected averaging criterion. If average is \code{"both"}, a boxplot is displayed to
-show the distribution of Shapley values computed using both criteria. If adjust is \code{TRUE}, the adjusted Shapley values are displayed.
+\item{out}{If average is \code{"obs"} or \code{"post"}, a bar plot or summary plot is generated based on the selected averaging criterion. 
+When \code{average} is set to \code{"both"}, either a bar plot or a boxplot comparing the distributions of Shapley values computed under the two averaging criteria is generated.
+In the case where a boxplot is produced, the observation-based and posterior-sample-based summaries can additionally be rendered separately
+via \code{out$observation} and \code{out$post}, respectively.
+If adjust is \code{TRUE}, the adjusted Shapley values are displayed.
 If \code{num_post} is specified, a bar plot or summary plot for the selected posterior sample is generated.}
 }
 \description{

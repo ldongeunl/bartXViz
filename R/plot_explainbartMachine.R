@@ -19,15 +19,21 @@
 #' Enter \code{TRUE} to check the Shapley values adjusted based on the model's average contribution.
 #' @param plot.flag If \code{average = "obs"}, the quantile interval of each variable's is provided by default.
 #' @param probs Enter the probability for the quantile interval. The default value is \code{0.95}.
+#' @param xlab  Enter the label to be displayed on the x-axis. If not provided, a default label will be used.
+#' @param ylab Enter the label for the y-axis if needed.
 #' @param ... Additional arguments to be passed
 #' @return The plot is returned based on the specified option.: 
-#' \item{out}{If average is \code{"obs"} or \code{"post"}, a bar plot or summary plot is generated based on the selected averaging criterion. If average is \code{"both"}, a boxplot is displayed to
-#'show the distribution of Shapley values computed using both criteria. If adjust is \code{TRUE}, the adjusted Shapley values are displayed.
+#' \item{out}{If average is \code{"obs"} or \code{"post"}, a bar plot or summary plot is generated based on the selected averaging criterion. 
+#' When \code{average} is set to \code{"both"}, either a bar plot or a boxplot comparing the distributions of Shapley values computed under the two averaging criteria is generated.
+#' In the case where a boxplot is produced, the observation-based and posterior-sample-based summaries can additionally be rendered separately
+#' via \code{out$observation} and \code{out$post}, respectively.
+#' If adjust is \code{TRUE}, the adjusted Shapley values are displayed.
 #' If \code{num_post} is specified, a bar plot or summary plot for the selected posterior sample is generated.}
 #' @export
 #' 
-plot.ExplainbartMachine <- function(x, average = NULL, type = NULL,  num_post= NULL,
-plot.flag=TRUE, adjust= FALSE,  probs=0.95, title=NULL,...){
+plot.ExplainbartMachine <- function(x, average = NULL, type = NULL, num_post= NULL,
+                                    plot.flag=TRUE, adjust= FALSE,  probs=0.95, 
+                                    title=NULL,xlab=NULL, ylab=NULL,...){
 
   if (!inherits(x, "ExplainbartMachine") ) {
     message("The input object must be of class 'ExplainbartMachine'.")
@@ -40,6 +46,6 @@ plot.flag=TRUE, adjust= FALSE,  probs=0.95, title=NULL,...){
     plot.ExplainBART (x= x, average=average , type = type,
                       adjust =  adjust, num_post =  num_post,
                       plot.flag = plot.flag , probs= as.numeric(probs),
-                      title = title)
+                      title = title, xlab, ylab)
 
 }
