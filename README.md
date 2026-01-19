@@ -2,9 +2,7 @@
 
 ### The **bartXViz** package provides SHAP-based model explanation tools for Bayesian Additive Regression Trees (BART) and Bayesian Additive Regression Trees with Post-Stratification (BARP).
 
-The version uploaded on December 21, 2025 is **v1.0.9**.
-The CRAN repository currently provides **v1.0.8**, which was released on July 28, 2025.
-An updated version will be submitted to CRAN shortly.
+The version uploaded on December 21, 2025 corresponds to **v1.0.9**, the same version currently released on CRAN.
 ([https://cran.r-project.org/web/packages/bartXViz/index.html](https://cran.r-project.org/web/packages/bartXViz/index.html))
 
 ---
