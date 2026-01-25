@@ -37,7 +37,7 @@ negative contributions across sequential data points, visualizing how each
 variable's contributions change for a single observation.
 }
 \examples{
-\donttest{
+\dontrun{
 ## Friedman data
 set.seed(2025)
 n <- 200

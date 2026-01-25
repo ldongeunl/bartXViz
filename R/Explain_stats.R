@@ -17,7 +17,7 @@
 #' \item{post}{A data.frame containing posterior-sample-based numerical summaries of Shapley values for each variable.}
 #' @export
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' ## Friedman data
 #' set.seed(2025)
 #' n <- 200

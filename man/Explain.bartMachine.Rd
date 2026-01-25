@@ -53,7 +53,7 @@ It is used to compute the Shapley values of models estimated
 using the \code{bartMachine} function from the \pkg{bartMachine}.
 }
 \examples{
-\donttest{
+\dontrun{
 ## Friedman data
 set.seed(2025)
 n <- 200

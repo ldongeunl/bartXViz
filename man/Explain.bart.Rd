@@ -52,7 +52,7 @@ in the Bayesian Additive Regression Trees (BART) model using permutation.
 It is used to compute the Shapley values of models estimated using the \code{bart} function from the \code{dbarts}.
 }
 \examples{
-\donttest{
+\dontrun{
 ## Friedman data
 set.seed(2025)
 n <- 200

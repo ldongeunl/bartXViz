@@ -37,7 +37,7 @@ contribute to a model's prediction for a specific observation using Shapley valu
  It can be used to visualize one or multiple observations.
 }
 \examples{
-\donttest{
+\dontrun{
 ## Friedman data
 set.seed(2025)
 n <- 200

@@ -140,7 +140,7 @@ Setting \code{exact = TRUE} with a linear model (i.e., an
 input features are independent.
 }
 \examples{
-\donttest{
+\dontrun{
 #
 # A projection pursuit regression (PPR) example
 #

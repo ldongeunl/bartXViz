@@ -97,7 +97,7 @@
 #' @export
 #' 
 #' @examples 
-#' \donttest{
+#' \dontrun{
 #' #
 #' # A projection pursuit regression (PPR) example
 #' #

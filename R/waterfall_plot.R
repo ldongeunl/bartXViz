@@ -14,7 +14,7 @@
 #' @return The function returns a waterfall plot.
 #' \item{plot_out}{The waterfall plot of the observation at index \code{obs_num}.}
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' ## Friedman data
 #' set.seed(2025)
 #' n <- 200

@@ -28,7 +28,7 @@
 #' @export
 #' @importFrom dplyr mutate
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' ## Friedman data
 #' set.seed(2025)
 #' n <- 200

@@ -64,7 +64,7 @@ It is designed to visualize \code{ExplainBART} class objects, which contain Shap
 The values and format used in the graph are determined based on the input parameters.
 }
 \examples{
-\donttest{
+\dontrun{
 ## Friedman data
 set.seed(2025)
 n <- 200

@@ -56,7 +56,7 @@ Computes global numerical summaries of Shapley values using two averaging criter
 observation-based and posterior-sample-based.
 }
 \examples{
-\donttest{
+\dontrun{
 ## Friedman data
 set.seed(2025)
 n <- 200

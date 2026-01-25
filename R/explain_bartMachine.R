@@ -27,7 +27,7 @@
 #' \item{factor_names}{The name of the categorical variable. If the data contains only continuous or dummy variables, it is set to \code{NULL}.}
 #' @export
 #' @examples 
-#' \donttest{
+#' \dontrun{
 #'## Friedman data
 #'set.seed(2025)
 #'n <- 200

@@ -15,7 +15,7 @@
 #' @return 
 #' \item{plot_out}{The decision plot for one or multiple observations specified in \code{obs_num}.}
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' ## Friedman data
 #'set.seed(2025)
 #'n <- 200

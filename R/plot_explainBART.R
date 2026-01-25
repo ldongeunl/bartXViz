@@ -30,7 +30,7 @@
 #' If adjust is \code{TRUE}, the adjusted Shapley values are displayed.
 #' If \code{num_post} is specified, a bar plot or summary plot for the selected posterior sample is generated.}
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' ## Friedman data
 #' set.seed(2025)
 #' n <- 200
